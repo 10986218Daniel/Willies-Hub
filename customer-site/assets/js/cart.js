@@ -4,12 +4,7 @@ updateCartCount();
 const cartList = document.getElementById("cart-list");
 const cartTotal = document.getElementById("cart-total");
 const whatsappBtn = document.getElementById("whatsapp-order");
-const DEFAULT_WHATSAPP_NUMBER = "2348000000000";
-
-function getWhatsappNumber() {
-  const saved = localStorage.getItem(STORAGE_KEYS.whatsappNumber);
-  return saved && saved.trim() ? saved.trim() : DEFAULT_WHATSAPP_NUMBER;
-}
+const WHATSAPP_NUMBER = "2348000000000";
 
 function renderCart() {
   if (!cartList || !cartTotal) return;
@@ -64,7 +59,7 @@ document.addEventListener("click", (event) => {
 
 whatsappBtn?.addEventListener("click", () => {
   const text = encodeURIComponent(whatsappMessage());
-  const url = `https://wa.me/${getWhatsappNumber()}?text=${text}`;
+  const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${text}`;
   window.open(url, "_blank");
 });
 
