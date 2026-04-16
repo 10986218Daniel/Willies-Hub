@@ -14,27 +14,6 @@ const productsBody = document.getElementById("products-body");
 let editingId = null;
 let uploadImageData = [];
 
-// Prevent form submission and handle login
-loginForm.addEventListener("submit", (e) => {
-  e.preventDefault();
-  loginHandler();
-});
-
-async function attemptLogin() {
-  const password = loginForm.password.value.trim();
-  
-  if (!loginOwner(password)) {
-    loginFeedback.textContent = "Invalid password. Try 'owner123'";
-    return;
-  }
-  showDashboard(true);
-  await renderProducts();
-}
-
-function loginHandler() {
-  attemptLogin();
-}
-
 function showDashboard(visible) {
   loginView.classList.toggle("hidden", visible);
   dashboardView.classList.toggle("hidden", !visible);
@@ -44,8 +23,8 @@ function currentProducts() {
   return readProducts();
 }
 
-async function renderProducts() {
-  const products = await currentProducts();
+function renderProducts() {
+  const products = currentProducts();
   productsBody.innerHTML = products.map(productRow).join("");
 }
 
@@ -79,25 +58,26 @@ imageFileInput?.addEventListener("change", async (event) => {
   uploadImageData = await Promise.all(files.map((file) => readFileAsDataUrl(file)));
 });
 
-// loginForm?.addEventListener("submit", async (event) => {
-//   event.preventDefault();
-//   const password = loginForm.password.value.trim();
-//   alert("Entered password: '" + password + "'");
-//   if (!loginOwner(password)) {
-//     loginFeedback.textContent = "Invalid password.";
-//     return;
-//   }
-//   showDashboard(true);
-//   await renderProducts();
-// });
+loginForm?.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const password = loginForm.password.value.trim();
+  if (!loginOwner(password)) {
+    loginFeedback.textContent = "Invalid password. Try 'owner123'.";
+    return;
+  }
+  loginFeedback.textContent = "";
+  showDashboard(true);
+  renderProducts();
+});
 
 logoutBtn?.addEventListener("click", () => {
   logoutOwner();
   showDashboard(false);
 });
 
-productForm?.addEventListener("submit", async (event) => {
+productForm?.addEventListener("submit", (event) => {
   event.preventDefault();
+  const products = currentProducts();
 
   const manualImages = productForm.imageUrls.value
     .split(",")
@@ -115,35 +95,26 @@ productForm?.addEventListener("submit", async (event) => {
     inStock: productForm.inStock.checked
   };
 
-  try {
-    if (editingId) {
-      await updateProductInSupabase(editingId, payload);
-    } else {
-      await addProductToSupabase(payload);
-    }
-
-    resetForm();
-    await renderProducts();
-    alert("Product saved successfully!");
-  } catch (error) {
-    alert("Error: " + error.message);
+  if (editingId) {
+    const updated = products.map((item) => (item.id === editingId ? payload : item));
+    writeProducts(updated);
+  } else {
+    writeProducts([payload, ...products]);
   }
+
+  resetForm();
+  renderProducts();
 });
 
-document.addEventListener("click", async (event) => {
+document.addEventListener("click", (event) => {
   const stockBtn = event.target.closest("[data-stock]");
   if (stockBtn) {
     const id = stockBtn.dataset.stock;
-    const products = await currentProducts();
-    const product = products.find((p) => p.id === id);
-    if (product) {
-      try {
-        await updateProductInSupabase(id, { inStock: !product.inStock });
-        await renderProducts();
-      } catch (error) {
-        alert("Error: " + error.message);
-      }
-    }
+    const updated = currentProducts().map((item) =>
+      item.id === id ? { ...item, inStock: !item.inStock } : item
+    );
+    writeProducts(updated);
+    renderProducts();
     return;
   }
 
@@ -153,20 +124,15 @@ document.addEventListener("click", async (event) => {
     const confirmed = window.confirm("Delete this product?");
     if (!confirmed) return;
 
-    try {
-      await deleteProductFromSupabase(id);
-      await renderProducts();
-    } catch (error) {
-      alert("Error: " + error.message);
-    }
+    writeProducts(currentProducts().filter((item) => item.id !== id));
+    renderProducts();
     return;
   }
 
   const editBtn = event.target.closest("[data-edit]");
   if (editBtn) {
     const id = editBtn.dataset.edit;
-    const products = await currentProducts();
-    const product = products.find((item) => item.id === id);
+    const product = currentProducts().find((item) => item.id === id);
     if (!product) return;
     editingId = id;
     formTitle.textContent = "Edit Product";
@@ -176,16 +142,5 @@ document.addEventListener("click", async (event) => {
 
 document.getElementById("cancel-edit")?.addEventListener("click", resetForm);
 
-// Sync products from Supabase periodically
-setInterval(async () => {
-  if (isOwnerLoggedIn()) {
-    // Silent sync - no need to refresh UI constantly
-  }
-}, 10000);
-
-(async () => {
-  showDashboard(isOwnerLoggedIn());
-  if (isOwnerLoggedIn()) {
-    await renderProducts();
-  }
-})();
+showDashboard(isOwnerLoggedIn());
+if (isOwnerLoggedIn()) renderProducts();

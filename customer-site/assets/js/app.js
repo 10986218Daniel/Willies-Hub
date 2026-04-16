@@ -6,14 +6,8 @@ const featuredGrid = document.getElementById("featured-grid");
 const searchInput = document.getElementById("search-input");
 const filterSelect = document.getElementById("category-filter");
 
-let products = [];
+let products = readProducts();
 let favorites = readFavorites();
-
-// Load products from Supabase
-async function loadProducts() {
-  products = await readProducts();
-  renderHomepageProducts();
-}
 
 function renderHomepageProducts() {
   const search = (searchInput?.value || "").trim().toLowerCase();
@@ -64,8 +58,5 @@ function bindProductActions() {
 searchInput?.addEventListener("input", renderHomepageProducts);
 filterSelect?.addEventListener("change", renderHomepageProducts);
 
-// Sync products from Supabase every 5 seconds
-setInterval(loadProducts, 5000);
-
 bindProductActions();
-loadProducts();
+renderHomepageProducts();
