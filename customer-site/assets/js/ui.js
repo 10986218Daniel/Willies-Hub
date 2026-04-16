@@ -29,7 +29,7 @@ function productCard(product, favorites = []) {
   const isFav = favorites.includes(product.id);
   return `
     <article class="product-card">
-      <a href="./product.html?id=${product.id}" class="product-card__img-wrap">
+      <a href="/product?id=${product.id}" class="product-card__img-wrap">
         <img src="${product.images[0]}" alt="${product.name}" loading="lazy" class="product-card__img" />
       </a>
       <div class="product-card__body">
