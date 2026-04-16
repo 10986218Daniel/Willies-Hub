@@ -2,15 +2,27 @@
   "version": 2,
   "builds": [
     {
-      "src": "customer-site/package.json",
-      "use": "@vercel/static-build"
+      "src": "customer-site/**",
+      "use": "@vercel/static"
     },
     {
-      "src": "owner-site/package.json",
-      "use": "@vercel/static-build"
+      "src": "owner-site/**",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
+    {
+      "src": "/owner-site",
+      "dest": "/owner-site/index.html"
+    },
+    {
+      "src": "/customer-site",
+      "dest": "/customer-site/index.html"
+    },
+    {
+      "src": "/owner",
+      "dest": "/owner-site/index.html"
+    },
     {
       "src": "/customer-site/(.*)",
       "dest": "/customer-site/$1"
@@ -20,8 +32,12 @@
       "dest": "/owner-site/$1"
     },
     {
+      "src": "/$",
+      "dest": "/customer-site/index.html"
+    },
+    {
       "src": "/(.*)",
-      "dest": "/customer-site/$1"
+      "dest": "/customer-site/index.html"
     }
   ]
 }
