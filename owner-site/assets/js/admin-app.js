@@ -14,6 +14,12 @@ const productsBody = document.getElementById("products-body");
 let editingId = null;
 let uploadImageData = [];
 
+// Prevent form submission and handle login
+loginForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  loginHandler();
+});
+
 async function attemptLogin() {
   const password = loginForm.password.value.trim();
   if (!loginOwner(password)) {
