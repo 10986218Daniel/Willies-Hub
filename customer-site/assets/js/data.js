@@ -2,7 +2,8 @@ const STORAGE_KEYS = {
   products: "clothify_products_v1",
   cart: "clothify_cart_v1",
   favorites: "clothify_favorites_v1",
-  ownerSession: "clothify_owner_session_v1"
+  ownerSession: "clothify_owner_session_v1",
+  whatsappNumber: "clothify_whatsapp_number_v1"
 };
 
 const DEFAULT_PRODUCTS = [

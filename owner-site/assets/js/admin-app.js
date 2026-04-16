@@ -5,6 +5,9 @@ const dashboardView = document.getElementById("dashboard-view");
 const loginForm = document.getElementById("login-form");
 const loginFeedback = document.getElementById("login-feedback");
 const logoutBtn = document.getElementById("logout-btn");
+const whatsappNumberInput = document.getElementById("whatsapp-number");
+const saveWhatsappBtn = document.getElementById("save-whatsapp");
+const whatsappFeedback = document.getElementById("whatsapp-feedback");
 
 const productForm = document.getElementById("product-form");
 const imageFileInput = document.getElementById("image-file");
@@ -13,6 +16,21 @@ const productsBody = document.getElementById("products-body");
 
 let editingId = null;
 let uploadImageData = [];
+
+function loadWhatsappSetting() {
+  const saved = localStorage.getItem(STORAGE_KEYS.whatsappNumber) || "";
+  if (whatsappNumberInput) whatsappNumberInput.value = saved;
+}
+
+function saveWhatsappSetting() {
+  const cleaned = (whatsappNumberInput?.value || "").replace(/[^\d]/g, "");
+  if (!cleaned) {
+    whatsappFeedback.textContent = "Please enter a valid WhatsApp number.";
+    return;
+  }
+  localStorage.setItem(STORAGE_KEYS.whatsappNumber, cleaned);
+  whatsappFeedback.textContent = "WhatsApp number saved.";
+}
 
 function showDashboard(visible) {
   loginView.classList.toggle("hidden", visible);
@@ -74,6 +92,8 @@ logoutBtn?.addEventListener("click", () => {
   logoutOwner();
   showDashboard(false);
 });
+
+saveWhatsappBtn?.addEventListener("click", saveWhatsappSetting);
 
 productForm?.addEventListener("submit", (event) => {
   event.preventDefault();
@@ -143,4 +163,5 @@ document.addEventListener("click", (event) => {
 document.getElementById("cancel-edit")?.addEventListener("click", resetForm);
 
 showDashboard(isOwnerLoggedIn());
+loadWhatsappSetting();
 if (isOwnerLoggedIn()) renderProducts();
