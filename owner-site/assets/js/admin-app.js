@@ -13,6 +13,7 @@ const productForm = document.getElementById("product-form");
 const imageFileInput = document.getElementById("image-file");
 const formTitle = document.getElementById("form-title");
 const productsBody = document.getElementById("products-body");
+const formFeedback = document.getElementById("form-feedback");
 
 let editingId = null;
 let uploadImageData = [];
@@ -43,7 +44,9 @@ function currentProducts() {
 
 function renderProducts() {
   const products = currentProducts();
-  productsBody.innerHTML = products.map(productRow).join("");
+  productsBody.innerHTML = products.length
+    ? products.map(productRow).join("")
+    : emptyProductRow();
 }
 
 function resetForm() {
@@ -51,6 +54,7 @@ function resetForm() {
   uploadImageData = [];
   productForm.reset();
   formTitle.textContent = "Add Product";
+  if (formFeedback) formFeedback.textContent = "";
 }
 
 function fillForm(product) {
@@ -73,7 +77,15 @@ function readFileAsDataUrl(file) {
 
 imageFileInput?.addEventListener("change", async (event) => {
   const files = Array.from(event.target.files || []);
-  uploadImageData = await Promise.all(files.map((file) => readFileAsDataUrl(file)));
+  try {
+    uploadImageData = await Promise.all(files.map((file) => readFileAsDataUrl(file)));
+    if (formFeedback && files.length) {
+      formFeedback.textContent = `${files.length} image${files.length > 1 ? "s" : ""} selected.`;
+    }
+  } catch (_error) {
+    uploadImageData = [];
+    if (formFeedback) formFeedback.textContent = "Could not read selected image files.";
+  }
 });
 
 loginForm?.addEventListener("submit", (event) => {
@@ -98,17 +110,25 @@ saveWhatsappBtn?.addEventListener("click", saveWhatsappSetting);
 productForm?.addEventListener("submit", (event) => {
   event.preventDefault();
   const products = currentProducts();
+  if (formFeedback) formFeedback.textContent = "";
 
   const manualImages = productForm.imageUrls.value
     .split(",")
     .map((url) => url.trim())
     .filter(Boolean);
 
+  const name = productForm.name.value.trim();
+  const price = Number(productForm.price.value);
+  if (!name || Number.isNaN(price) || price <= 0) {
+    if (formFeedback) formFeedback.textContent = "Please provide a valid name and a price greater than 0.";
+    return;
+  }
+
   const images = [...manualImages, ...uploadImageData];
   const payload = {
     id: editingId || `p-${Date.now()}`,
-    name: productForm.name.value.trim(),
-    price: Number(productForm.price.value),
+    name,
+    price,
     category: productForm.category.value,
     description: productForm.description.value.trim(),
     images: images.length ? images : ["https://via.placeholder.com/600x750?text=Product+Image"],
@@ -124,6 +144,7 @@ productForm?.addEventListener("submit", (event) => {
 
   resetForm();
   renderProducts();
+  if (formFeedback) formFeedback.textContent = "Product saved successfully.";
 });
 
 document.addEventListener("click", (event) => {

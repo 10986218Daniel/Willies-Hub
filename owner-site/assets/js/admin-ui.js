@@ -23,3 +23,13 @@ function productRow(product) {
     </tr>
   `;
 }
+
+function emptyProductRow() {
+  return `
+    <tr>
+      <td colspan="6" style="text-align:center;color:#5f667d;padding:16px;">
+        No products yet. Add your first product from the form.
+      </td>
+    </tr>
+  `;
+}
