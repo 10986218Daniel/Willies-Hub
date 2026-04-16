@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Willies HUB | Kejetia Dubai</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./assets/css/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="container">
+        <a class="brand" href="./index.html">WILLIES HUB</a>
+        <nav class="nav-links">
+          <a href="#about">About</a>
+          <a href="#products">Shop</a>
+          <a href="./cart.html" class="cart-pill">Cart (<span data-cart-count>0</span>)</a>
+        </nav>
+      </div>  
+    </header>
+
+    <main class="container">
+      <section class="hero">
+        <div class="hero__content">
+          <h1>Premium Everyday Wear</h1>
+          <p>Minimal silhouettes, modern comfort, and timeless style for every season.</p>
+          <a href="#products" class="btn btn--dark">Explore Collection</a>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">Featured</h2>
+        <div id="featured-grid" class="grid"></div>
+      </section>
+
+      <section id="products">
+        <h2 class="section-title">All Products</h2>
+        <div class="filters">
+          <input id="search-input" type="search" placeholder="Search products..." />
+          <select id="category-filter">
+            <option value="All">All Categories</option>
+            <option value="Men">Men</option>
+            <option value="Women">Women</option>
+            <option value="Shoes">Shoes</option>
+            <option value="Accessories">Accessories</option>
+          </select>
+        </div>
+        <div id="product-grid" class="grid"></div>
+      </section>
+
+      <section id="about" class="about">
+        <div class="about-grid">
+          <div class="about-copy">
+            <h2 class="section-title">About Willies HUB</h2>
+            <p>Willies HUB offers premium everyday wear with a focus on minimal silhouettes, modern comfort, and timeless style. Our curated collection ensures you look and feel your best every day.</p>
+            <div class="contact-details">
+              <h3>Contact Details</h3>
+              <p><strong>Email:</strong> support@willieshub.com</p>
+              <p><strong>Phone:</strong> +1 (555) 123-4567</p>
+              <p><strong>Address:</strong> 123 Market Street, Suite 500</p>
+            </div>
+          </div>
+          <div class="feedback-card">
+            <h3>Feedback</h3>
+            <p>Have a question, suggestion, or feedback about our collection? Send it our way and we'll be in touch soon.</p>
+            <form class="feedback-form" onsubmit="event.preventDefault();">
+              <label>
+                Name
+                <input type="text" placeholder="Your name" />
+              </label>
+              <label>
+                Email
+                <input type="email" placeholder="you@example.com" />
+              </label>
+              <label>
+                Message
+                <textarea rows="5" placeholder="Share your feedback"></textarea>
+              </label>
+              <button type="submit" class="btn btn--dark">Submit Feedback</button>
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div id="toast-host"></div>
+
+    <script src="./assets/js/data.js"></script>
+    <script src="./assets/js/store.js"></script>
+    <script src="./assets/js/ui.js"></script>
+    <script src="./assets/js/app.js"></script>
+  </body>
+</html>

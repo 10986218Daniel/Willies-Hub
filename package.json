@@ -1,0 +1,17 @@
+{
+  "name": "clothify-shop",
+  "version": "1.0.0",
+  "description": "Modern clothing store with customer and owner sites",
+  "scripts": {
+    "dev": "concurrently \"cd customer-site && npx http-server -p 8080\" \"cd owner-site && npx http-server -p 8081\"",
+    "build": "echo 'Static sites - no build needed'",
+    "deploy": "vercel --prod"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "http-server": "^14.1.1"
+  }
+}
