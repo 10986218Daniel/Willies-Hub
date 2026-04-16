@@ -2,8 +2,6 @@ initProductStorage();
 
 const loginView = document.getElementById("login-view");
 const dashboardView = document.getElementById("dashboard-view");
-const loginForm = document.getElementById("login-form");
-const loginFeedback = document.getElementById("login-feedback");
 const logoutBtn = document.getElementById("logout-btn");
 
 const productForm = document.getElementById("product-form");
@@ -14,24 +12,10 @@ const productsBody = document.getElementById("products-body");
 let editingId = null;
 let uploadImageData = [];
 
-// Prevent form submission and handle login
-loginForm.addEventListener("submit", (e) => {
-  e.preventDefault();
-  loginHandler();
-});
-
-async function attemptLogin() {
-  const password = loginForm.password.value.trim();
-  if (!loginOwner(password)) {
-    loginFeedback.textContent = "Invalid password.";
-    return;
-  }
+// Simple get started function - no authentication
+function getStarted() {
   showDashboard(true);
-  await renderProducts();
-}
-
-function loginHandler() {
-  attemptLogin();
+  renderProducts();
 }
 
 function showDashboard(visible) {
@@ -177,14 +161,11 @@ document.getElementById("cancel-edit")?.addEventListener("click", resetForm);
 
 // Sync products from Supabase periodically
 setInterval(async () => {
-  if (isOwnerLoggedIn()) {
-    // Silent sync - no need to refresh UI constantly
-  }
+  // Silent sync - no need to refresh UI constantly
 }, 10000);
 
+// Initialize - show dashboard directly
 (async () => {
-  showDashboard(isOwnerLoggedIn());
-  if (isOwnerLoggedIn()) {
-    await renderProducts();
-  }
+  showDashboard(true);
+  await renderProducts();
 })();
