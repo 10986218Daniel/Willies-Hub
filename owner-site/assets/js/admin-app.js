@@ -22,15 +22,11 @@ loginForm.addEventListener("submit", (e) => {
 
 async function attemptLogin() {
   const password = loginForm.password.value.trim();
-  console.log("Attempting login with password:", password);
-  console.log("loginOwner function exists:", typeof loginOwner);
   
   if (!loginOwner(password)) {
-    console.log("Login failed - invalid password");
-    loginFeedback.textContent = "Invalid password.";
+    loginFeedback.textContent = "Invalid password. Try 'owner123'";
     return;
   }
-  console.log("Login successful - showing dashboard");
   showDashboard(true);
   await renderProducts();
 }
