@@ -1,1 +1,12 @@
-.vercel
+# Dependencies
+node_modules/
+
+# Local environment variables
+.env
+
+# Vercel local settings
+.vercel/
+
+# System files
+.DS_Store
+Thumbs.db
